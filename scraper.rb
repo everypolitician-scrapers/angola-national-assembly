@@ -14,7 +14,6 @@ Capybara.default_driver = :poltergeist
 @BASE = 'http://www.parlamento.ao'
 @PAGE = @BASE + '/web/guest/deputados-e-grupos-parlamentares/deputados/lista'
 
-
 def extract_people
   within('div#main-content') do 
     all('div.members-table').each do |mp|
@@ -30,8 +29,8 @@ def extract_people
       data[:id] = data[:homepage].split('/').last
       data[:photo].prepend @BASE unless data[:photo].empty?
       data[:homepage].prepend @BASE unless data[:homepage].empty?
-      puts data
-      ScraperWiki.save_sqlite([:id, :term], data)
+      puts "Adding #{data[:id]}"
+      ScraperWiki.save_sqlite([:id, :term], data, 'data')
     end
   end
 end
