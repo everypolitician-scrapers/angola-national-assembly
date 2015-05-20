@@ -2,47 +2,49 @@
 # encoding: utf-8
 
 require 'scraperwiki'
-require 'nokogiri'
-require 'date'
-require 'open-uri'
-require 'date'
+require 'capybara'
+require 'capybara/poltergeist'
 
-require 'colorize'
-require 'pry'
-require 'csv'
-require 'open-uri/cached'
-OpenURI::Cache.cache_path = '.cache'
+# require 'colorize'
+# require 'pry'
 
-def noko(url)
-  Nokogiri::HTML(open(url).read) 
-end
-
-def datefrom(date)
-  Date.parse(date)
-end
+include Capybara::DSL
+Capybara.default_driver = :poltergeist
 
 @BASE = 'http://www.parlamento.ao'
+@PAGE = @BASE + '/web/guest/deputados-e-grupos-parlamentares/deputados/lista'
 
-def scrape(url)
-  warn "Fetching #{url}"
 
-  page = noko(url)
-  content = page.css('div#main-content')
-
-  content.css('div.members-table').each do |mp|
-    parts = mp.css('div')
-    data = {
-      name: parts[1].css('a').text.strip,
-      photo: parts[0].css('img/@src').text,
-      party: parts[2].text.strip,
-      constituency: parts[3].text.strip,
-    }
-    data[:photo].prepend @BASE unless data[:photo].empty?
-    puts data
-    # ScraperWiki.save_sqlite([:name, :term], data)
+def extract_people
+  within('div#main-content') do 
+    all('div.members-table').each do |mp|
+      parts = mp.all('div')
+      data = {
+        name: parts[1].find('a').text.strip,
+        homepage: parts[1].find('a')[:href],
+        photo: parts[0].find('img')[:src],
+        party: parts[2].text.strip,
+        constituency: parts[3].text.strip,
+        term: 3,
+      }
+      data[:id] = data[:homepage].split('/').last
+      data[:photo].prepend @BASE unless data[:photo].empty?
+      data[:homepage].prepend @BASE unless data[:homepage].empty?
+      puts data
+      ScraperWiki.save_sqlite([:id, :term], data)
+    end
   end
 end
 
+visit @PAGE
+extract_people
 
-page = '/web/guest/deputados-e-grupos-parlamentares/deputados/lista'
-scrape(@BASE + page)
+next_link = '//a[text()[contains(.,"Próximo")]]'
+while page.has_xpath? next_link
+  puts "Next page..."
+  find(:xpath, next_link).click
+  extract_people
+end
+
+
+
