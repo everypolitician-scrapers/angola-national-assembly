@@ -30,7 +30,7 @@ def extract_people
       data[:photo].prepend @BASE unless data[:photo].empty?
       data[:homepage].prepend @BASE unless data[:homepage].empty?
       puts "Adding #{data[:id]}"
-      ScraperWiki.save_sqlite([:id, :term], data, 'data')
+      ScraperWiki.save_sqlite([:id, :term], data)
     end
   end
 end
