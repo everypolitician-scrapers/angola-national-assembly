@@ -22,7 +22,7 @@ def extract_people
         name: parts[1].find('a').text.strip,
         homepage: parts[1].find('a')[:href],
         photo: parts[0].find('img')[:src],
-        party: parts[2].text.strip,
+        party: parts[2].text.strip || 'unknown',
         constituency: parts[3].text.strip,
         term: 3,
       }
