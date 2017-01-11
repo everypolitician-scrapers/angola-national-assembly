@@ -30,10 +30,13 @@ def extract_people
       data[:homepage].prepend @BASE unless data[:homepage].empty?
       puts "Adding #{data[:id]}"
       sleep 1
+      # puts data
       ScraperWiki.save_sqlite(%i(id term), data)
     end
   end
 end
+
+ScraperWiki.sqliteexecute('DELETE FROM data') rescue nil
 
 visit @PAGE
 extract_people
