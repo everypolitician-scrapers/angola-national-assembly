@@ -1,13 +1,13 @@
-source "https://rubygems.org"
-ruby "2.0.0"
+# frozen_string_literal: true
+source 'https://rubygems.org'
+ruby '2.0.0'
 
-# gem 'scraperwiki-morph'
-gem 'scraperwiki', git: "https://github.com/openaustralia/scraperwiki-ruby.git", branch: "morph_defaults"
-gem 'json'
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}.git" }
+
+gem 'capybara'
 gem 'nokogiri'
-gem 'colorize'
-gem 'open-uri-cached'
+gem 'poltergeist'
 gem 'pry'
 gem 'rake'
-gem 'capybara'
-gem 'poltergeist'
+gem 'rubocop'
+gem 'scraperwiki', github: 'openaustralia/scraperwiki-ruby', branch: 'morph_defaults'
