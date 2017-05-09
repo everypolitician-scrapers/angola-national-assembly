@@ -36,7 +36,7 @@ def extract_people
   end
 end
 
-ScraperWiki.sqliteexecute('DELETE FROM data') rescue nil
+ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
 
 visit @PAGE
 extract_people
