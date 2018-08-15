@@ -28,9 +28,8 @@ def extract_people
       data[:id] = data[:homepage].split('/').last
       data[:photo].prepend @BASE unless data[:photo].empty?
       data[:homepage].prepend @BASE unless data[:homepage].empty?
-      puts "Adding #{data[:id]}"
       sleep 1
-      # puts data
+      puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
       ScraperWiki.save_sqlite(%i(id term), data)
     end
   end
