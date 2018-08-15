@@ -23,14 +23,13 @@ def extract_people
         photo:        parts[0].find('img')[:src],
         party:        parts[2].text.strip || 'unknown',
         constituency: parts[3].text.strip,
-        term:         3,
       }
       data[:id] = data[:homepage].split('/').last
       data[:photo].prepend @BASE unless data[:photo].empty?
       data[:homepage].prepend @BASE unless data[:homepage].empty?
       sleep 1
       puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
-      ScraperWiki.save_sqlite(%i(id term), data)
+      ScraperWiki.save_sqlite(%i(id), data)
     end
   end
 end
