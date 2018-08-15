@@ -2,7 +2,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require 'capybara'
+require 'capybara/dsl'
 require 'capybara/poltergeist'
 require 'pry'
 require 'scraperwiki'
