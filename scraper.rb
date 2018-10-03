@@ -19,14 +19,12 @@ def extract_people
       parts = mp.all('div')
       data = {
         name:         parts[1].find('a').text.strip,
-        homepage:     parts[1].find('a')[:href],
-        photo:        parts[0].find('img')[:src],
+        homepage:     URI.join(@PAGE, parts[1].find('a')[:href]).to_s,
+        photo:        URI.join(@PAGE, parts[0].find('img')[:src]).to_s,
         party:        parts[2].text.strip || 'unknown',
         constituency: parts[3].text.strip,
       }
       data[:id] = data[:homepage].split('/').last
-      data[:photo].prepend @BASE unless data[:photo].empty?
-      data[:homepage].prepend @BASE unless data[:homepage].empty?
       sleep 1
       puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
       ScraperWiki.save_sqlite(%i(id), data)
